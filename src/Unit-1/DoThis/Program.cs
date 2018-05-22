@@ -14,8 +14,6 @@ namespace WinTail
             // YOU NEED TO FILL IN HERE
             MyActorSystem = ActorSystem.Create("MyFirstActorSystem");
 
-            PrintInstructions();
-
             // time to make your first actors!
             //YOU NEED TO FILL IN HERE
             // make consoleWriterActor using these props: Props.Create(() => new ConsoleWriterActor())
@@ -25,7 +23,7 @@ namespace WinTail
 
             // tell console reader to begin
             //YOU NEED TO FILL IN HERE
-            consoleReaderActor.Tell("start");
+            consoleReaderActor.Tell(ConsoleReaderActor.StartCommand);
 
             // blocks the main thread from exiting until the actor system is shut down
             MyActorSystem.WhenTerminated.Wait();
