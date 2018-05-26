@@ -1,5 +1,6 @@
 ﻿using System;
-﻿using Akka.Actor;
+using Akka.Actor;
+using WinTail.WinTail;
 
 namespace WinTail
 {
@@ -20,8 +21,16 @@ namespace WinTail
             // make consoleReaderActor using these props: Props.Create(() => new ConsoleReaderActor(consoleWriterActor))
             var consoleWriterProps = Props.Create<ConsoleWriterActor>();
             var consoleWriterActor = MyActorSystem.ActorOf(consoleWriterProps, "consoleWriterActor");
-            
-            var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor(consoleWriterActor)), "consoleReaderActor");
+
+            //var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor(consoleWriterActor, null)), "consoleReaderActor");
+
+
+            //Lesson 4 
+            var tailCoordinatorActor = MyActorSystem.ActorOf(Props.Create(() => new TailCoordinatorActor()), "tailCoordinatorActor");
+            var fileValidationActor = MyActorSystem.ActorOf(Props.Create(() => new FileValidatorActor(consoleWriterActor, tailCoordinatorActor)), "fileValidationActor");
+
+
+            var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor(consoleWriterActor, fileValidationActor)), "consoleReaderActor");
 
             // tell console reader to begin
             //YOU NEED TO FILL IN HERE
