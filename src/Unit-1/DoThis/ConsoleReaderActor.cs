@@ -12,35 +12,14 @@ namespace WinTail
     {
         public const string StartCommand = "start";
         public const string ExitCommand = "exit";
-        private readonly IActorRef _consoleWriterActor;
-        private readonly IActorRef _validationActor;
-
-        public ConsoleReaderActor(IActorRef consoleWriterActor, IActorRef validationActor = null)
-        {
-            _consoleWriterActor = consoleWriterActor;
-            if (validationActor == null)
-            {
-
-                _validationActor = Context.ActorOf(Props.Create(() => new ValidationActor(_consoleWriterActor)), "consoleReaderActor_validationActor");
-            }
-            else
-            {
-                _validationActor = validationActor;
-            }
-        }
-
+        
         protected override void OnReceive(object message)
         {
             if (message.Equals(StartCommand))
             {
                 DoPrintInstructions();
             }
-            else if (message is InputError)
-            {
-                _consoleWriterActor.Tell(message as InputError);
-            }
-
-            _validationActor.Tell(Console.ReadLine());
+            GetAndValidateInput();
         }
         #region Internal methods
         private void DoPrintInstructions()
@@ -53,7 +32,23 @@ namespace WinTail
 
             Console.WriteLine("Type 'exit' to quit this application at any time.\n");
         }
+        /// <summary>
+        /// Reads input from console, validates it, then signals appropriate response
+        /// (continue processing, error, success, etc.).
+        /// </summary>
+        private void GetAndValidateInput()
+        {
+            var message = Console.ReadLine();
+            if (!string.IsNullOrEmpty(message) && String.Equals(message, ExitCommand, StringComparison.OrdinalIgnoreCase))
+            {
+                // if user typed ExitCommand, shut down the entire actor system (allows the process to exit)
+                Context.System.Terminate();
+                return;
+            }
 
+            // otherwise, just send the message off for validation
+            Context.ActorSelection("akka://MyFirstActorSystem/user/fileValidationActor").Tell(message);
+        }
         #endregion
 
     }

@@ -27,10 +27,10 @@ namespace WinTail
 
             //Lesson 4 
             var tailCoordinatorActor = MyActorSystem.ActorOf(Props.Create(() => new TailCoordinatorActor()), "tailCoordinatorActor");
-            var fileValidationActor = MyActorSystem.ActorOf(Props.Create(() => new FileValidatorActor(consoleWriterActor, tailCoordinatorActor)), "fileValidationActor");
+            var fileValidationActor = MyActorSystem.ActorOf(Props.Create(() => new FileValidatorActor(consoleWriterActor)), "fileValidationActor");
 
 
-            var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor(consoleWriterActor, fileValidationActor)), "consoleReaderActor");
+            var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor()), "consoleReaderActor");
 
             // tell console reader to begin
             //YOU NEED TO FILL IN HERE

@@ -56,7 +56,7 @@ namespace WinTail
                   () => new TailActor(msg.ReporterActor, msg.FilePath)));
             }
         }
-        
+
         protected override SupervisorStrategy SupervisorStrategy()
         {
             return new OneForOneStrategy(
@@ -73,7 +73,7 @@ namespace WinTail
 
             //In all other cases, just restart the failing actor
             else return Directive.Restart;
-                });
+        });
         }
 
     }
